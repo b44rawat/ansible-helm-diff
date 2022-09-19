@@ -22,6 +22,9 @@
          release_state: present
          values:
            controller:
+#              pod:
+#                extraLabels:
+#                  key1: value1
              service:
                create: true
                type: NodePort
