@@ -1,0 +1,27 @@
+---
+ - name: Setup
+   hosts: all
+   become: true
+   tasks:
+     - name: Install Helm Diff
+       kubernetes.core.helm_plugin:
+         plugin_path: "https://github.com/databus23/helm-diff"
+         state: present
+     - name: Add Chart repo for kubernetes
+       kubernetes.core.helm_repository:
+         repo_name: "nginx-stable"
+         repo_url: "https://helm.nginx.com/stable"
+         repo_state: present
+     - name: Create Nginx Ingress Controller deployment
+       kubernetes.core.helm:
+         release_name: nginx-ingress
+         chart_ref: "nginx-stable/nginx-ingress"
+         chart_version: "0.14.0"
+         release_namespace: nginx-ingress
+         create_namespace: yes
+         release_state: present
+         values:
+           controller:
+             service:
+               create: true
+               type: NodePort
